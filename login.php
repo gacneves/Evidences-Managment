@@ -30,7 +30,7 @@ if(isset($login) and isset($pass)){
                 header('location:index.php');
                }
                else{
-                echo "Invalid Login or Password";
+                header('location:login.php?error=dataerror');
                }
             }
             else
@@ -45,80 +45,113 @@ if(isset($login) and isset($pass)){
     // Close connection
     mysqli_close($connection);
 }
+
 else{
-  echo "
-  <!DOCTYPE html>
-<html>
+  echo "<!DOCTYPE html>
+<html lang='en'>
 <head>
+<meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>Login</title>
+<link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons'>
+<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css'>
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css'> 
 <style>
-body {font-family: Arial, Helvetica, sans-serif;}
-form {border: 3px solid #f1f1f1;}
-
-input[type=text], input[type=password] {
-  width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-  border-radius: 5px;
+form {
+  animation: fadeInDown .5s forwards;
+  animation-delay: 0.4s;
+  opacity: 0;
 }
 
-button {
-  background-color: #4CAF50;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  cursor: pointer;
-  width: 100%;
-  border-radius: 5px;
+@keyframes fadeInDown {
+from {
+        opacity: 0;
+        transform: translate3d(0, -90px, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
 }
-
-button:hover {
-  opacity: 0.9;
-}
-
-.container {
-  padding: 16px;
-}
-
-span.psw {
-  float: right;
-  padding-top: 16px;
-}
-
-/* Change styles for span and cancel button on extra small screens */
-@media screen and (max-width: 300px) {
-  span.psw {
-     display: block;
-     float: none;
+  body {
+    color: #fff;
+    background: #1a6e50;
+  }
+  .form-control {
+    min-height: 41px;
+    background: #d9d9d9;
+    box-shadow: none !important;
+    border: transparent;
+  }
+  .form-control:focus {
+    background: #e6e6e6;
+  }
+  .form-control, .btn {        
+        border-radius: 2px;
+    }
+  .login-form {
+    width: 400px;
+    margin: 40px auto;
+    text-align: center;
   }
 
+    .login-form form {
+    color: #999999;
+    border-radius: 3px;
+      margin-bottom: 15px;
+        background: #404040;
+        box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+        padding: 30px;
+    }
+    .login-form .btn {        
+        font-size: 16px;
+        font-weight: bold;
+    background: success;
+    border: none;
+        outline: none !important;
+    }
+  .login-form .btn:hover, .login-form .btn:focus {
+    opacity: 0.8;
+  }
+  .login-form a:hover {
+    text-decoration: underline;
+  }
+  .login-form form a {
+    color: #1a6e50;
+    text-decoration: none;
+  }
+  .material-icons {
+    font-size: 120px;
 }
+
 </style>
 </head>
 <body>
-
-<h2>User Login</h2>
-
-<form action='login.php' method='post'>
-
-  <div class='container'>
-    <label for='uname'><b>Username</b></label>
-    <input type='text' placeholder='Enter Username' name='login' required>
-
-    <label for='psw'><b>Password</b></label>
-    <input type='password' placeholder='Enter Password' name='pass' required>
-        
-    <button type='submit'>Login</button>
-  </div>
-
-</form>
-
+<div class='login-form'>
+    <form action='login.php' method='post'>
+    <div class='ic'>
+          <a class='text-center'><span class='material-icons' aria-hidden='true'>account_circle</span></a>
+          </div>
+        <h2 class='text-center' style = 'margin: 0 0 25px'>Login</h2>   
+        <div class='form-group has-error'>
+          <input type='text' class='form-control' name='login' placeholder='Enter Username' required> <br>
+        </div>
+    <div class='form-group'>
+            <input type='password' class='form-control' name='pass' placeholder='Enter Password' required> <br>
+        </div>        
+        <div class='form-group'>
+            <button type='submit' class='btn btn-success btn-block btn-lg'>Sign in</button>
+        </div>
+      <br>
+        <div><?php ?></div>
+    </form>
+</div>
 </body>
 </html>
   ";
+  if(isset($_GET["error"]) && !empty(trim($_GET["error"])))
+    {
+        echo "<script> alert('Invalid Username or Password ! Please try again.');</script>";
+}
 }
 ?>

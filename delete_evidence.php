@@ -7,11 +7,59 @@ if(isset($_GET['logout'])){
 }
 ?>
 
+<?php
+// process delete operation after confirmation
+if(isset($_POST['id']) && !empty($_POST['id']))
+{
+    // include config connection db
+    include_once 'config.php';
+
+    // Prepare a delete statement
+    $sql = "DELETE FROM evidences WHERE id =?";
+    if($stmt = mysqli_prepare($connection,  $sql))
+    {
+        mysqli_stmt_bind_param($stmt, "i", $param_id);
+
+        // set parameters
+        $param_id = trim($_POST['id']);
+
+        // Attempt to execute the prepared statement
+        if(mysqli_stmt_execute($stmt))
+        {
+            //  Records delete successfully. Redirect to landing page
+            header("location:evidences.php");
+            exit();
+        }
+        else
+        {
+            echo "Oops! Something went wrong. Please try again leter.";
+        }
+    }
+    // close statement
+    mysqli_stmt_close($stmt);
+
+    // close connection
+    mysqli_close($connection);
+}  
+    else
+{
+      // Check existence of id parameter
+        if(empty(trim($_GET['id'])))
+        {
+            // URL doesn't contain id parameter. Redirect to error page
+            header("location:error.php");
+            exit();
+        }
+   
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Error</title>
+    <title>Delete Evidence</title>
     <!-- library css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -29,7 +77,7 @@ if(isset($_GET['logout'])){
             <div class="col bg-dark text-light" style="border-right:solid #1a6e50; border-right-width:10px">
             <br>
                 <div class="dropdown">
-                    <a class="btn text-light dropdown-toggle" style="background:#1a6e50"href="#" role="button" id="dropdownList" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="btn text-light dropdown-toggle" style="background:#1a6e50" href="#" role="button" id="dropdownList" data-bs-toggle="dropdown" aria-expanded="false">
                         <span class='material-icons float-start' aria-hidden='true'>view_list</span> Lists
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="dropdownList">
@@ -42,10 +90,17 @@ if(isset($_GET['logout'])){
             <div class="col-10 bg-light">
                 <br>
                 <h3 class="titulo-tabla">
-                    Invalid Request
+                    Delete Evidence
                 </h3>
                 <hr class="bg-dark">
-                <p>Sorry, you've made an invalid request. Please <a href="index.php" class="alert-link">go back</a> and try again.</p>
+                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                        <input type="hidden" name="id" value="<?php echo trim($_GET["id"]); ?>"/>
+                        <p>Are you sure you want to delete this evidence?</p>
+                        <p>
+                            <input type="submit" value="Yes" class="btn btn-danger">
+                            <a href="evidence.php" class="btn btn-success">No</a>
+                        </p>
+                </form>
             </div>
         </div>
     </div>
@@ -63,8 +118,10 @@ if(isset($_GET['logout'])){
     <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.colVis.min.js"></script>
-               
+        
+       
     <!-- internal script -->
     <script src="js/export.js"></script>
+
 </body>
 </html>
