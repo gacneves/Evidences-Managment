@@ -1,6 +1,6 @@
 # evidences
 
-Project creted for the Software Engineering class at ICT/Unifesp 2020/2021.
+Project created for the Software Engineering class at ICT/Unifesp 2020/2021.
 
 Authors:
 
